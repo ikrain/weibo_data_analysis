@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.krain.weibo_data_analysis_web.dao.SystemArticleCommentDao">
+
+    <select id="selectCommentEmotion" resultType="cn.krain.weibo_data_analysis_web.entity.SystemArticleComment">
+        select
+               comment_author_name,
+               comment_time,
+               comment_content,
+               comment_emotion,
+               emotion_state
+        from system_article_comment
+        <where>
+            <if test="topic_name!=null and topic_name!=''">
+                topic_name like CONCAT('%',#{topic_name},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--  分页查询  -->
+    <select id="selectCommEmoList" resultType="cn.krain.weibo_data_analysis_web.entity.SystemArticleComment">
+        select
+        comment_author_name,
+        comment_time,
+        comment_content,
+        comment_emotion,
+        emotion_state
+        from system_article_comment
+        <where>
+            <if test="topic_name!=null and topic_name!=''">
+                topic_name like CONCAT('%',#{topic_name},'%')
+            </if>
+        </where>
+        limit #{skipCount},#{limit};
+    </select>
+
+    <select id="countTotalByTN" resultType="int">
+        select count(*) from system_article_comment
+        <where>
+            <if test="topic_name!=null and topic_name!=''">
+                topic_name like CONCAT('%',#{topic_name},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

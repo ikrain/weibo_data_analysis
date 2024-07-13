@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.krain.weibo_data_analysis_web.dao.SystemTimeDao">
+
+    <select id="selectTopicTime" resultType="cn.krain.weibo_data_analysis_web.vo.TopicTimeVo">
+        select topic_time, count(topic_time) as count from system_topic_time group by topic_time
+    </select>
+
+    <select id="selectArticleTime" resultType="cn.krain.weibo_data_analysis_web.vo.ArticleTimeVo">
+        select article_time, count(article_time) as count from system_article_time group by article_time
+    </select>
+
+    <select id="selectCommentTime" resultType="cn.krain.weibo_data_analysis_web.vo.CommentTimeVo">
+        select comment_time, count(comment_time) as count from system_comment_time group by comment_time
+    </select>
+
+    <select id="selectTopicNum" resultType="int">
+        select count(*) from system_topic_time
+    </select>
+
+
+    <select id="selectArticleNum" resultType="int">
+        select count(*) from system_article_time
+    </select>
+
+
+    <select id="selectTopicAddNum" resultType="int">
+        select count(*) from system_topic_time where topic_time=(select max(topic_time) from system_topic_time);
+    </select>
+
+
+    <select id="selectArticleAddNum" resultType="int">
+        select count(*) from system_article_time where article_time=(select max(article_time) from system_article_time);
+    </select>
+</mapper>

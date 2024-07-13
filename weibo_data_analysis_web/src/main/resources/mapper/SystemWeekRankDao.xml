@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.krain.weibo_data_analysis_web.dao.SystemWeekRankDao">
+
+    <!--  分页查询  -->
+    <select id="selectWeekRank" resultType="cn.krain.weibo_data_analysis_web.vo.SystemWeekRankVo">
+        select
+            w.id,
+            w.topic_name,
+            w.topic_num,
+            w.topic_time,
+            d.topic_category,
+            d.topic_introduction as topic_introduction,
+            d.topic_host,
+            d.topic_read_num,
+            d.topic_talk_num,
+            d.topic_original_num,
+            d.topic_read_trend,
+            d.topic_talk_trend,
+            d.topic_original_trend
+        from system_week_rank w join topic_detail d on w.id=d.topic_id
+        where d.topic_introduction!=''
+        <if test="content!=null and content!=''">
+            and w.topic_name like CONCAT('%',#{content},'%')
+        </if>
+        order by topic_num desc limit #{skipCount},#{limit};
+    </select>
+
+    <select id="countTotalByContent" resultType="int">
+        select count(*) from system_week_rank w join topic_detail d on w.id=d.topic_id where d.topic_introduction!='' and w.topic_name like CONCAT('%',#{content},'%')
+    </select>
+
+    <!--  获取最新舆情话题  -->
+    <select id="selectNewTopic" resultType="cn.krain.weibo_data_analysis_web.entity.SystemWeekRank">
+        select id, topic_name, topic_time, topic_link from system_week_rank order by topic_time desc limit 0,10;
+    </select>
+
+    <select id="selectTopicByWord" resultType="cn.krain.weibo_data_analysis_web.entity.SystemWeekRank">
+        select * from system_week_rank
+        <where>
+            <if test="senWord!=null and senWord!=''">
+                topic_name like CONCAT('%',#{senWord},'%')
+            </if>
+        </where>
+        order by topic_num desc limit 0,10;
+    </select>
+
+
+    <select id="selectNumByWord" resultType="cn.krain.weibo_data_analysis_web.entity.SystemWeekRank">
+        select topic_name, topic_time, count(topic_time) as topic_num from system_topic_time
+        <where>
+            <if test="title!=null and title!=''">
+                topic_name like CONCAT('%',#{title},'%')
+            </if>
+        </where>
+        group by topic_time;
+    </select>
+</mapper>

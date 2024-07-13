@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.krain.weibo_data_analysis_web.dao.SystemSensitiveWordDao">
+
+    <!--  有参或者无参查询  -->
+    <select id="selectSensitiveWord" resultType="cn.krain.weibo_data_analysis_web.entity.SystemSensitiveWord">
+        select * from system_sensitive_word
+    </select>
+
+    <delete id="deleteSenWord">
+        delete from system_sensitive_word where id=#{id}
+    </delete>
+
+    <insert id="insertSenWord">
+        insert into system_sensitive_word
+        (
+            id,
+            sensitive_word,
+            create_time,
+            creater
+        )
+        values (#{id},#{sensitive_word},#{create_time},#{creater})
+    </insert>
+
+</mapper>

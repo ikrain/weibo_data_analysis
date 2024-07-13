@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.krain.weibo_data_analysis_web.dao.SystemUserDao">
+
+    <!--  用户登录  -->
+    <select id="selectLoginUser" resultType="cn.krain.weibo_data_analysis_web.entity.SystemUser">
+        select * from system_user where username=#{username} and password=#{password}
+    </select>
+    <select id="selectUserByToken" resultType="cn.krain.weibo_data_analysis_web.entity.SystemUser">
+        select * from system_user where token=#{token}
+    </select>
+
+    <!--  有参或者无参查询  -->
+    <select id="getUser" resultType="cn.krain.weibo_data_analysis_web.entity.SystemUser">
+        select * from system_user
+        <where>
+            <if test="username!=null and username!=''">
+                username like CONCAT('%',#{username},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--  分页查询  -->
+    <select id="getPageUser" resultType="cn.krain.weibo_data_analysis_web.entity.SystemUser">
+        select * from system_user
+        <where>
+            <if test="username!=null and username!=''">
+                username like CONCAT('%',#{username},'%')
+            </if>
+        </where>
+        limit #{skipCount},#{limit}
+    </select>
+
+    <!--  多表查询  -->
+    <select id="selectUserVoByToken" resultType="cn.krain.weibo_data_analysis_web.vo.SystemUserVo">
+        select u.id, u.username, u.role_id, u.password, u.create_time, u.token, u.role_name, u.avatar, r.represent as role_represent, r.menu as role_menu
+        from system_user u join system_role r on u.role_id=r.id
+        where u.token=#{token}
+    </select>
+
+    <select id="selectUserNum" resultType="int">
+        select count(id) from system_user
+    </select>
+
+    <!--  用户管理  -->
+    <!--
+        根据用户id删除用户
+    -->
+    <delete id="deleteUserById">
+        delete from system_user where id=#{id}
+    </delete>
+
+    <!--
+        新增一个user
+    -->
+    <insert id="insertUser">
+        insert into system_user (id,username,password,role_id,token,role_name,avatar,create_time)
+        values (#{id},#{username},#{password},#{role_id},#{token},
+                (select role_name from system_role where id=#{role_id}),
+               #{avatar},#{create_time})
+    </insert>
+
+    <!--
+        修改用户信息
+    -->
+    <update id="updateUser">
+        update system_user set
+            username=#{username}, role_id=#{role_id},
+            role_name=(select role_name from system_role where id=#{role_id})
+        where id=#{id}
+    </update>
+</mapper>

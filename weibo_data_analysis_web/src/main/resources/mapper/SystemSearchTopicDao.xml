@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.krain.weibo_data_analysis_web.dao.SystemSearchTopicDao">
+
+    <!--  分页查询  -->
+    <select id="selectSearchTopic" resultType="cn.krain.weibo_data_analysis_web.vo.SystemSearchTopicVo">
+        select
+               distinct a.article_content,
+               a.article_id,
+               a.author_name,
+               a.article_time,
+               a.article_emotion,
+               a.emotion_state,
+               a.article_hot_value,
+               t.article_link
+        from system_article_search a join topic_article t on a.article_id=t.article_id
+        <where>
+            <if test="content!=null and content!=''">
+                and a.article_content like CONCAT('%',#{content},'%')
+            </if>
+        </where>
+        order by a.article_hot_value desc limit #{skipCount},#{limit};
+    </select>
+
+    <select id="countTotalByContent" resultType="int">
+        select count( distinct article_content )
+        from system_article_search a join topic_article t on a.article_id=t.article_id
+        <where>
+            <if test="content!=null and content!=''">
+                and a.article_content like CONCAT('%',#{content},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

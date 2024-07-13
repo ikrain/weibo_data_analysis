@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.krain.weibo_data_analysis_web.dao.SystemTopicAreaDao">
+
+    <!--  用户登录  -->
+    <select id="selectTopicArea" resultType="cn.krain.weibo_data_analysis_web.vo.SystemTopicAreaVo">
+        select category as name, category_num as value from system_topic_area order by value desc limit 6
+    </select>
+</mapper>

@@ -1,0 +1,3 @@
+ipconfig
+mkdir cc
+pause
